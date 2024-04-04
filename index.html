@@ -1,0 +1,1146 @@
+<!DOCTYPE html>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.3/jspdf.umd.min.js"></script>
+
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quotation Generator</title>
+    <style>
+        table {
+            width: 1000vw;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            border: 1px solid black;
+            padding: 8px;
+            text-align: left;
+        }
+
+        .inputGroup {
+            display: flex;
+            align-items: center;
+        }
+
+        #state {
+            width: 200px; /* Adjust the width as needed */
+            text-align: left; /* Center-align the options */
+            position: relative;
+            z-index: 1; /* Ensure the select element is displayed above other elements */
+        }
+
+        #state option {
+            z-index: 2; /* Ensure the options are displayed above other elements */
+        }
+        @media print {
+            /* Hide the default date and time */
+            .date-time {
+                display: none !important;
+            }
+           
+        }
+        @media print {
+            .watermark {
+                position: fixed;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                opacity: 1; /* Adjust the opacity as needed */
+                z-index: -1; /* Ensure the watermark is behind other elements */
+                width: 100px; /* Adjust the width of the watermark */
+                height: auto; /* Allow the height to adjust proportionally */
+            }
+        }
+    </style>
+</head>
+<body>
+    <img src="https://vaibhaventerprise.in/images/logo.png" class="logo" alt="logo" width="200" height="auto"><br>
+
+    <form id="quotationForm"><br>
+
+        <label for="refNo">Ref No.:</label>
+        <input type="text" id="refNo" name="refNo">
+
+        <label for="date">Date:</label>
+        <input type="date" id="date" name="date"><br><br>
+
+        <label for="beneficiary">Beneficiary:</label>
+        <input type="text" id="beneficiary" name="beneficiary">
+
+        <label for="company">Company:</label>
+        <input type="text" id="company" name="company"><br><br>
+
+        <label for="city">City:</label>
+        <input type="text" id="city" name="city">
+
+        <label for="state">State:</label>
+        <select id="state" name="state">
+            <option value="Chhattisgarh">Chhattisgarh</option>
+            <option value="Andaman and Nicobar Islands">Andaman and Nicobar Islands</option>
+            <option value="Andhra Pradesh">Andhra Pradesh</option>
+            <option value="Arunachal Pradesh">Arunachal Pradesh</option>
+            <option value="Assam">Assam</option>
+            <option value="Bihar">Bihar</option>
+            <option value="Chandigarh">Chandigarh</option>
+            <option value="Chhattisgarh">Chhattisgarh</option>
+            <option value="Dadra and Nagar Haveli">Dadra and Nagar Haveli</option>
+            <option value="Daman and Diu">Daman and Diu</option>
+            <option value="Delhi">Delhi</option>
+            <option value="Goa">Goa</option>
+            <option value="Gujarat">Gujarat</option>
+            <option value="Haryana">Haryana</option>
+            <option value="Himachal Pradesh">Himachal Pradesh</option>
+            <option value="Jammu and Kashmir">Jammu and Kashmir</option>
+            <option value="Jharkhand">Jharkhand</option>
+            <option value="Karnataka">Karnataka</option>
+            <option value="Kerala">Kerala</option>
+            <option value="Ladakh">Ladakh</option>
+            <option value="Lakshadweep">Lakshadweep</option>
+            <option value="Madhya Pradesh">Madhya Pradesh</option>
+            <option value="Maharashtra">Maharashtra</option>
+            <option value="Manipur">Manipur</option>
+            <option value="Meghalaya">Meghalaya</option>
+            <option value="Mizoram">Mizoram</option>
+            <option value="Nagaland">Nagaland</option>
+            <option value="Odisha">Odisha</option>
+            <option value="Puducherry">Puducherry</option>
+            <option value="Punjab">Punjab</option>
+            <option value="Rajasthan">Rajasthan</option>
+            <option value="Sikkim">Sikkim</option>
+            <option value="Tamil Nadu">Tamil Nadu</option>
+            <option value="Telangana">Telangana</option>
+            <option value="Tripura">Tripura</option>
+            <option value="Uttar Pradesh">Uttar Pradesh</option>
+            <option value="Uttarakhand">Uttarakhand</option>
+            <option value="West Bengal">West Bengal</option>
+            </select><br><br>
+
+            <label for="contactCheckbox">Contact No.:</label>
+<input type="checkbox" id="contactCheckbox" onclick="toggleContactTextbox()">
+<input type="text" id="contactNumber" style="display: none;" placeholder="Enter contact number">
+
+<label for="emailCheckbox">Email ID:</label>
+<input type="checkbox" id="emailCheckbox" onclick="toggleemailTextbox()">
+<input type="text" id="emailInput" style="display: none;" placeholder="Enter Email ID">
+
+<label for="kindAttnCheckbox">Kind Attn:</label>
+<input type="checkbox" id="kindAttnCheckbox" onclick="togglekindAttnTextbox()">
+<input type="text" id="kindAttn" style="display: none;" placeholder="Enter Name"><br><br>
+
+            <label for="subject">Subject:</label>
+            <select id="subject" name="subject">
+                <option value="Quotation for">Quotation for</option>
+                <option value="Estimate for">Estimate for</option>
+                <option value="Performa Invoice for">Performa Invoice for</option>
+                
+            </select>
+
+            <label for="productType">Product Type:</label>
+            <select id="productType" name="productType">
+                <option value="Safety Products">Safety Products</option>
+                <option value="Petroleum Products">Petroleum Products</option>
+                <option value="Lab Testing Equipment's">Lab Testing Equipment's</option>
+            </select><br><br>
+
+        <div id="itemsContainer">
+            <label for="items1">Items:</label>
+            <select id="items1" name="items1">
+                <option value=""></option>
+                <option value="Cone">Cone</option>
+                <option value="Safety Jacket">Safety Jacket</option>
+                <option value="Helmet">Helmet</option>
+                <option value="Retro Reflective Tape">Retro Reflective Tape</option>
+
+                <option value="Sports Cones">Sports Cones</option>
+                <option value="Traffic Cone [500mm]">Traffic Cone [500mm]</option>
+                <option value="Traffic Cone [750mm]">Traffic Cone [750mm]</option>
+                <option value="Traffic Cone [750mm] Rubber Base">Traffic Cone [750mm] Rubber Base</option>
+                <option value="Traffic Cone [750mm] Molded Base">Traffic Cone [750mm] Molded Base</option>
+                <option value="Traffic Cone [750mm] Hexagonal Shape">Traffic Cone [750mm] Hexagonal Shape</option>
+                <option value="Traffic Cone Flexible [750mm]">Traffic Cone Flexible [750mm]</option>
+                <option value="Traffic Cone Flexible [750mm] Rubber Base">Traffic Cone Flexible [750mm] Rubber Base</option>
+                <option value="Traffic Cone [1000mm]">Traffic Cone [1000mm]</option>
+                <option value="Traffic Cone [1000mm] Hexagonal Shape">Traffic Cone [1000mm] Hexagonal Shape</option>
+                <option value="Traffic Cone Flexible [1000mm] Rubber Base">Traffic Cone Flexible [1000mm] Rubber Base</option>
+                <option value="Plastic Cone Massage Plate">Plastic Cone Massage Plate</option>
+                <option value="Plastic Cone Connecting Rod">Plastic Cone Connecting Rod</option>
+                <option value="Plastic Cone Connecting Chain [4mm] Color: - White / Red">Plastic Cone Connecting Chain [4mm] Color: - White / Red</option>
+                <option value="Plastic Cone Connecting Chain [8mm] Color: - White / Red">Plastic Cone Connecting Chain [8mm] Color: - White / Red</option>
+                <option value="Plastic Spring Post">Plastic Spring Post</option>
+                <option value="PU Flexible Spring Post">PU Flexible Spring Post</option>
+                <option value="Plastic Bollard">Plastic Bollard</option>
+                <option value="Plastic Bollard Heavy Duty">Plastic Bollard Heavy Duty</option>
+                <option value="Plastic Center Verge">Plastic Center Verge</option>
+                <option value="Plastic Lane Divider">Plastic Lane Divider</option>
+                <option value="Plastic Speed Breaker [50mm]">Plastic Speed Breaker [50mm]</option>
+                <option value="Plastic Speed Breaker [75mm]">Plastic Speed Breaker [75mm]</option>
+                <option value="Rubber Speed Breaker [50mm]">Rubber Speed Breaker [50mm]</option>
+                <option value="Rubber Speed Breaker [75mm]">Rubber Speed Breaker [75mm]</option>
+                <option value="RS – Rambler Strip">RS – Rambler Strip</option>
+                <option value="Convex Mirror [45cm]">Convex Mirror [45cm]</option>
+                <option value="Convex Mirror [60cm]">Convex Mirror [60cm]</option>
+                <option value="Convex Mirror [80cm]">Convex Mirror [80cm]</option>
+                <option value="Convex Mirror [100cm]">Convex Mirror [100cm]</option>
+                <option value="Dome Mirror">Dome Mirror</option>
+                <option value="Aluminum Road Stud">Aluminum Road Stud</option>
+                <option value="Traffic Baton Light D/C">Traffic Baton Light D/C</option>
+                <option value="Traffic Baton Light D/C Rechargeable">Traffic Baton Light D/C Rechargeable</option>
+                <option value="Traffic Baton Light D/C Small with Magnet">Traffic Baton Light D/C Small with Magnet</option>
+                <option value="Traffic Baton Light D/C Small with Magnet Rechargeable">Traffic Baton Light D/C Small with Magnet Rechargeable</option>
+                <option value="Median Marker">Median Marker</option>
+                <option value="Plastic Anti-Glare Screen">Plastic Anti-Glare Screen</option>
+                <option value="Traffic Delineator Post">Traffic Delineator Post</option>
+                <option value="Metal Delineator Post">Metal Delineator Post</option>
+                <option value="Wheel Lock">Wheel Lock</option>
+                <option value="Plastic Floor Stand">Plastic Floor Stand</option>
+                <option value="Safety Fence">Safety Fence</option>
+                <option value="Wire Protector">Wire Protector</option>
+                <option value="Water Filled Barrier">Water Filled Barrier</option>
+                <option value="Plastic Expandable Barrier">Plastic Expandable Barrier</option>
+                <option value="Metal Expandable Barrier">Metal Expandable Barrier</option>
+                <option value="Caution Tape">Caution Tape</option>
+                <option value="Solar Road Stud">Solar Road Stud</option>
+                <option value="Solar Delineator">Solar Delineator</option>
+                <option value="Solar Delineator with Clamp">Solar Delineator with Clamp</option>
+                <option value="Solar Delineator with Mesh & Pole">Solar Delineator with Mesh & Pole</option>
+                <option value="Solar Flasher">Solar Flasher</option>
+                <option value="Solar Traffic Blinker">Solar Traffic Blinker</option>
+                <option value="Hand Held Metal Detector">Hand Held Metal Detector</option>
+                <option value="Under Vehicle Inspection Mirror">Under Vehicle Inspection Mirror</option>
+                <option value="Wheel Stopper">Wheel Stopper</option>
+                <option value="Plastic Wheel Stopper">Plastic Wheel Stopper</option>
+                <option value="Corner Guards V Shape">Corner Guards V Shape</option>
+                <option value="Corner Guards U Shape">Corner Guards U Shape</option>
+                <option value="Lifebuoy Ring">Lifebuoy Ring</option>
+                <option value="Safety Net">Safety Net</option>
+                <option value="Safety Net Aluminum Rope">Safety Net Aluminum Rope</option>
+                <option value="Safety Net Wooden Rope">Safety Net Wooden Rope</option>
+                <option value="Life Jacket">Life Jacket</option>
+            </select><br>
+            <label for="addManuallyCheckbox">Add Manually:</label>
+<input type="checkbox" id="addManuallyCheckbox" onclick="toggleaddManuallyTextbox()">
+<input type="text" id="addManually" style="display: none;" placeholder="Enter Item Name"><br>
+
+            <label for="specificationCheckbox">Specifications:</label>
+            <input type="checkbox" id="specificationCheckbox" onclick="toggleSpecificationTextbox()"><br>  
+            <textarea id="specifications" style="display: none; height: 8em; width: 300px;" placeholder="Enter specifications"></textarea>
+            <input type="text" id="specifications" style="display: none;" placeholder="Enter specifications">
+
+             <!-- New dropdown for Unit -->
+             <label for="unit1">Unit:</label>
+             <select id="unit1" name="unit1">
+                 <option value="Each Nos">Each Nos</option>
+                 <option value="Each Machine">Each Machine</option>
+             </select><br><br>
+
+            
+
+            <label for="quantity1">Quantity:</label>
+            <input type="number" id="quantity1" name="quantity1" value="1" min="1">
+            <label for="price1">Price:</label>
+            <input type="number" id="price1" name="price1" step="0" min="0" value="0"><br><br>
+ <!-- Add a cancel button -->
+ <button type="button" onclick="removeItem(this)">Cancel</button>
+    
+    </div>
+
+        
+
+        <button type="button" onclick="addMoreItem()">Add More Item</button><br><br>
+
+        <button type="button" onclick="generateQuotation()">Generate Quotation</button>
+        <button type="button" onclick="generateEstimate()">Generate Estimate</button>
+        <button type="button" onclick="generatePerformaInvoice()">Generate Performa Invoice</button>
+
+
+    </form>
+
+    <script>
+         function toggleSpecificationTextbox() {
+    const specificationCheckbox = document.getElementById('specificationCheckbox');
+    const specificationsTextbox = document.getElementById('specifications');
+    if (specificationCheckbox.checked) {
+        specificationsTextbox.style.display = 'block';
+    } else {
+        specificationsTextbox.style.display = 'none';
+    }
+}
+           
+           function toggleContactTextbox() {
+    const contactCheckbox = document.getElementById('contactCheckbox');
+    const contactNumberTextbox = document.getElementById('contactNumber');
+    if (contactCheckbox.checked) {
+        contactNumberTextbox.style.display = 'block';
+    } else {
+        contactNumberTextbox.style.display = 'none';
+    }
+}
+function togglekindAttnTextbox() {
+    const kindAttnCheckbox = document.getElementById('kindAttnCheckbox');
+    const kindAttnTextbox = document.getElementById('kindAttn');
+    if (kindAttnCheckbox.checked) {
+        kindAttnTextbox.style.display = 'block';
+    } else {
+        kindAttnTextbox.style.display = 'none';
+    }
+}
+
+function toggleemailTextbox() {
+    const emailCheckbox = document.getElementById('emailCheckbox');
+    const emailTextbox = document.getElementById('emailInput');
+    if (emailCheckbox.checked) {
+        emailTextbox.style.display = 'block';
+    } else {
+        emailTextbox.style.display = 'none';
+    }
+}
+function toggleaddManuallyTextbox() {
+    const addManuallyCheckbox = document.getElementById('addManuallyCheckbox');
+    const addManuallyTextbox = document.getElementById('addManually');
+    if (addManuallyCheckbox.checked) {
+        addManuallyTextbox.style.display = 'block';
+    } else {
+        addManuallyTextbox.style.display = 'none';
+    }
+}
+    let itemCount = 1;
+        function toggleTextbox(checkbox, className) {
+            const textbox = checkbox.parentElement.querySelector(`.${className}`);
+            textbox.style.display = checkbox.checked ? 'block' : 'none';
+        }
+
+
+        function addMoreItem() {
+        itemCount++;
+        console.log("Add More Item button clicked");
+
+            const itemsContainer = document.getElementById('itemsContainer');
+            const newItemDiv = document.createElement('div');
+            newItemDiv.classList.add('item');
+            newItemDiv.innerHTML = `
+                <label for="items${itemCount}">Items:</label>
+                <select id="items${itemCount}" name="items${itemCount}">
+                    <option value="Cone">Cone</option>
+                    <option value="Safety Jacket">Safety Jacket</option>
+                    <option value="Helmet">Helmet</option>
+                    <option value="Retro Reflective Tape">Retro Reflective Tape</option>
+
+                    <option value="Sports Cones">Sports Cones</option>
+                    <option value="Traffic Cone [500mm]">Traffic Cone [500mm]</option>
+                    <option value="Traffic Cone [750mm]">Traffic Cone [750mm]</option>
+                    <option value="Traffic Cone [750mm] Rubber Base">Traffic Cone [750mm] Rubber Base</option>
+                    <option value="Traffic Cone [750mm] Molded Base">Traffic Cone [750mm] Molded Base</option>
+                    <option value="Traffic Cone [750mm] Hexagonal Shape">Traffic Cone [750mm] Hexagonal Shape</option>
+                    <option value="Traffic Cone Flexible [750mm]">Traffic Cone Flexible [750mm]</option>
+                    <option value="Traffic Cone Flexible [750mm] Rubber Base">Traffic Cone Flexible [750mm] Rubber Base</option>
+                    <option value="Traffic Cone [1000mm]">Traffic Cone [1000mm]</option>
+                    <option value="Traffic Cone [1000mm] Hexagonal Shape">Traffic Cone [1000mm] Hexagonal Shape</option>
+                    <option value="Traffic Cone Flexible [1000mm] Rubber Base">Traffic Cone Flexible [1000mm] Rubber Base</option>
+                    <option value="Plastic Cone Massage Plate">Plastic Cone Massage Plate</option>
+                    <option value="Plastic Cone Connecting Rod">Plastic Cone Connecting Rod</option>
+                    <option value="Plastic Cone Connecting Chain [4mm] Color: - White / Red">Plastic Cone Connecting Chain [4mm] Color: - White / Red</option>
+                    <option value="Plastic Cone Connecting Chain [8mm] Color: - White / Red">Plastic Cone Connecting Chain [8mm] Color: - White / Red</option>
+                    <option value="Plastic Spring Post">Plastic Spring Post</option>
+                    <option value="PU Flexible Spring Post">PU Flexible Spring Post</option>
+                    <option value="Plastic Bollard">Plastic Bollard</option>
+                    <option value="Plastic Bollard Heavy Duty">Plastic Bollard Heavy Duty</option>
+                    <option value="Plastic Center Verge">Plastic Center Verge</option>
+                    <option value="Plastic Lane Divider">Plastic Lane Divider</option>
+                    <option value="Plastic Speed Breaker [50mm]">Plastic Speed Breaker [50mm]</option>
+                    <option value="Plastic Speed Breaker [75mm]">Plastic Speed Breaker [75mm]</option>
+                    <option value="Rubber Speed Breaker [50mm]">Rubber Speed Breaker [50mm]</option>
+                    <option value="Rubber Speed Breaker [75mm]">Rubber Speed Breaker [75mm]</option>
+                    <option value="RS – Rambler Strip">RS – Rambler Strip</option>
+                    <option value="Convex Mirror [45cm]">Convex Mirror [45cm]</option>
+                    <option value="Convex Mirror [60cm]">Convex Mirror [60cm]</option>
+                    <option value="Convex Mirror [80cm]">Convex Mirror [80cm]</option>
+                    <option value="Convex Mirror [100cm]">Convex Mirror [100cm]</option>
+                    <option value="Dome Mirror">Dome Mirror</option>
+                    <option value="Aluminum Road Stud">Aluminum Road Stud</option>
+                    <option value="Traffic Baton Light D/C">Traffic Baton Light D/C</option>
+                    <option value="Traffic Baton Light D/C Rechargeable">Traffic Baton Light D/C Rechargeable</option>
+                    <option value="Traffic Baton Light D/C Small with Magnet">Traffic Baton Light D/C Small with Magnet</option>
+                    <option value="Traffic Baton Light D/C Small with Magnet Rechargeable">Traffic Baton Light D/C Small with Magnet Rechargeable</option>
+                    <option value="Median Marker">Median Marker</option>
+                    <option value="Plastic Anti-Glare Screen">Plastic Anti-Glare Screen</option>
+                    <option value="Traffic Delineator Post">Traffic Delineator Post</option>
+                    <option value="Metal Delineator Post">Metal Delineator Post</option>
+                    <option value="Wheel Lock">Wheel Lock</option>
+                    <option value="Plastic Floor Stand">Plastic Floor Stand</option>
+                    <option value="Safety Fence">Safety Fence</option>
+                    <option value="Wire Protector">Wire Protector</option>
+                    <option value="Water Filled Barrier">Water Filled Barrier</option>
+                    <option value="Plastic Expandable Barrier">Plastic Expandable Barrier</option>
+                    <option value="Metal Expandable Barrier">Metal Expandable Barrier</option>
+                    <option value="Caution Tape">Caution Tape</option>
+                    <option value="Solar Road Stud">Solar Road Stud</option>
+                    <option value="Solar Delineator">Solar Delineator</option>
+                    <option value="Solar Delineator with Clamp">Solar Delineator with Clamp</option>
+                    <option value="Solar Delineator with Mesh & Pole">Solar Delineator with Mesh & Pole</option>
+                    <option value="Solar Flasher">Solar Flasher</option>
+                    <option value="Solar Traffic Blinker">Solar Traffic Blinker</option>
+                    <option value="Hand Held Metal Detector">Hand Held Metal Detector</option>
+                    <option value="Under Vehicle Inspection Mirror">Under Vehicle Inspection Mirror</option>
+                    <option value="Wheel Stopper">Wheel Stopper</option>
+                    <option value="Plastic Wheel Stopper">Plastic Wheel Stopper</option>
+                    <option value="Corner Guards V Shape">Corner Guards V Shape</option>
+                    <option value="Corner Guards U Shape">Corner Guards U Shape</option>
+                    <option value="Lifebuoy Ring">Lifebuoy Ring</option>
+                    <option value="Safety Net">Safety Net</option>
+                    <option value="Safety Net Aluminum Rope">Safety Net Aluminum Rope</option>
+                    <option value="Safety Net Wooden Rope">Safety Net Wooden Rope</option>
+                    <option value="Life Jacket">Life Jacket</option>
+                </select><br>
+                <label for="addManuallyCheckbox">Add Manually:</label>
+<input type="checkbox" id="addManuallyCheckbox" onclick="toggleaddManuallyTextbox()">
+<input type="text" id="addManually" style="display: none;" placeholder="Enter Item Name"><br>
+                <label for="specificationCheckbox">Specifications:</label>
+            <input type="checkbox" id="specificationCheckbox" onclick="toggleSpecificationTextbox()"><br>  
+            <textarea id="specifications" style="display: none; height: 8em; width: 300px;" placeholder="Enter specifications"></textarea>
+            <input type="text" id="specifications" style="display: none;" placeholder="Enter specifications">
+
+
+                <!-- New dropdown for Unit -->
+                <label for="unit${itemCount}">Unit:</label>
+                <select id="unit${itemCount}" name="unit${itemCount}">
+                    <option value="Each Nos">Each Nos</option>
+                    <option value="Each Machine">Each Machine</option>
+                </select><br><br>
+
+               
+               
+
+
+                <label for="quantity${itemCount}">Quantity:</label>
+                <input type="number" id="quantity${itemCount}" name="quantity${itemCount}" value="1" min="0">
+                <label for="price${itemCount}">Price:</label>
+                <input type="number" id="price${itemCount}" name="price${itemCount}" step="" min="" value=""><br><br>
+            `;
+            const cancelButton = document.createElement('button');
+    cancelButton.textContent = 'Cancel';
+    cancelButton.addEventListener('click', () => {
+        newItemDiv.remove();
+
+           // Remove the parent element of the clicked button (the item entry)
+    const itemEntry = button.parentElement;
+    itemEntry.remove();
+    });
+    newItemDiv.appendChild(cancelButton);
+            itemsContainer.appendChild(newItemDiv);
+          
+ 
+        }
+        
+        function openCalendar() {
+        document.getElementById('date').click(); // Trigger click event on the date input field
+    }
+   
+        function generateQuotation() {
+           
+
+            const beneficiary = document.getElementById('beneficiary').value;
+            const company = document.getElementById('company').value;
+            const city = document.getElementById('city').value;
+            const state = document.getElementById('state').value;
+            const subject = document.getElementById('subject').value;
+            const productType = document.getElementById('productType').value; // Get selected product type
+
+
+             // Retrieve the reference number from the input field
+    const refNo = document.getElementById('refNo').value;
+
+
+// Retrieve selected date and format it
+const selectedDate = document.getElementById('date').value;
+const formattedDate = selectedDate ? formatDate(selectedDate) : '&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;';
+// Retrieve the contact number if the checkbox is checked
+const contactCheckbox = document.getElementById('contactCheckbox');
+    const contactNumberTextbox = document.getElementById('contactNumber');
+    const contactNumber = contactCheckbox.checked ? contactNumberTextbox.value : '';
+
+    // Include "Contact No:" heading only if the checkbox is checked
+    const contactInfo = contactCheckbox.checked ? `<p>Contact No: ${contactNumber}</p>` : '';
+
+
+    // Retrieve the Kind Attn if the checkbox is checked
+const kindAttnCheckbox = document.getElementById('kindAttnCheckbox');
+    const kindAttnTextbox = document.getElementById('kindAttn');
+    const kindAttn = kindAttnCheckbox.checked ? kindAttnTextbox.value : '';
+
+    // Include "Kind Attn: " heading only if the checkbox is checked
+    const KindAttnPersonInfo = kindAttnCheckbox.checked ? `<p>Kind Attn: ${kindAttn}</p>` : '';
+
+// Retrieve the Email Id if the checkbox is checked
+const emailCheckbox = document.getElementById('emailCheckbox');
+    const emailTextbox = document.getElementById('emailInput');
+    const emailInput = emailCheckbox.checked ? emailTextbox.value : '';
+
+    // Include "Kind Attn: " heading only if the checkbox is checked
+    const emailIdInputInfo = emailCheckbox.checked ? `<p>Email ID: ${emailInput}</p>` : '';
+
+
+
+            const items = [];
+            for (let i = 1; i <= itemCount; i++) {
+                const item = document.getElementById(`items${i}`).value; 
+
+                const addManuallyCheckbox = document.getElementById('addManuallyCheckbox');
+    const addManuallyTextbox = document.getElementById('addManually');
+    const addManually = addManuallyCheckbox.checked ? addManuallyTextbox.value.replace() : '';
+
+
+                const specificationCheckbox = document.getElementById('specificationCheckbox');
+    const specificationsTextbox = document.getElementById('specifications');
+    const specifications = specificationCheckbox.checked ? specificationsTextbox.value.replace(/\n/g, '<br>') : '';
+                const unit = document.getElementById(`unit${i}`).value; // Get the selected unit
+                const quantity = parseInt(document.getElementById(`quantity${i}`).value);
+                const price = parseFloat(document.getElementById(`price${i}`).value);
+                items.push({ item, addManually, specifications, unit, quantity, price });
+            }
+
+            
+            let quotationHTML = `
+        <style>
+            /* Styles for the header image */
+        .header-image {
+            position: fixed;
+            top: 0;
+            left: -8;
+            width: 104%;
+            z-index: -1;
+        }
+        
+            table {
+                width: 100%;
+                border-collapse: collapse;
+            }
+            th, td {
+                border: 1px solid black;
+                padding: 8px;
+                text-align: center;
+            }
+            th {
+                text-align: center;
+            }
+            
+            .sno-col {
+                width: 10%;
+            }
+            .item-col {
+                width: 40%;
+            }
+            
+            .unit-col {
+                width: 20%;
+            }
+            .price-col {
+                width: 20%;
+            }
+            
+
+            .watermark {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 600px; /* Set the width */
+    height: auto; /* Automatically adjust height to maintain aspect ratio */
+    opacity: 0.1; /* Set the opacity (0.5 is 50%) */
+    pointer-events: none; /* Make sure the image doesn't interfere with mouse events */
+}
+.footer-image {
+    page-break-before: always; /* Add a page break before the footer image */
+    position: fixed;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: -1;
+    width: 700px; /* Adjust width as needed */
+    height: auto; /* Adjust height as needed */
+}
+
+           </style>
+           <!-- Header image -->
+    <img src="https://github.com/ArjunPimplapure/VEERP/blob/main/VE%20LE.jpg?raw=trues" class="header-image" alt="Header Image" width="200" height="auto"><br><br><br><br><br><br><br><br><br><br>
+
+    <!-- Footer image -->
+<img src="https://github.com/ArjunPimplapure/VEERP/blob/main/Footer.jpg?raw=true" class="footer-image" alt="Footer Image" width="400" height="auto">
+
+<img src="https://vaibhaventerprise.in/images/logo.png" class="watermark" alt="watermark">
+
+<div style="display: flex; justify-content: space-between;">
+    <div style="flex-grow: 1;">
+        <p style="margin: 0; font-size: 12px; font-weight: bold;">Ref No: VE/24-25/ ${refNo}</p>
+    </div>
+    <div style="flex-grow: 1; text-align: center;">
+        <h2 style="margin: 0; font-size: 12px; font-weight: bold;">Quotation</h2>
+    </div>
+    <div style="flex-grow: 1; text-align: right;">
+        <p style="margin: 0; font-size: 12px; font-weight: bold;">Date: ${formattedDate}</p>
+    </div>
+</div><br>
+
+<div style="flex-grow: 1;">
+
+        <p style="margin: 0; font-size: 12px; font-weight: bold;">To,</p>
+        <p style="margin: 0; font-size: 12px; font-weight: bold;">${beneficiary}</p>
+        <p style="margin: 0; font-size: 12px; font-weight: bold;">${company}</p>
+        <p style="margin: 0; font-size: 12px; font-weight: bold;">Add: ${city} ${state}</p>
+        <!-- New "Contact No." section -->
+        
+        <div style="margin: 0; font-size: 12px; font-weight: bold;">
+            <p>${contactInfo}</p>
+            <p>${emailIdInputInfo}</p>
+        </div>
+
+        <!-- New "Kind Attn" section -->
+        <div style="margin: 0; font-size: 12px; font-weight: bold;">
+            <p>${KindAttnPersonInfo}</p>
+        </div>
+
+        <div style="margin: 0; font-size: 12px; font-weight: bold;">
+            <p>Subject: ${subject} ${productType}</p>
+    </div><br>
+  
+        <p style="margin: 0; font-size: 13px;">Hello Sir/ Ma'am,</p>
+        <p style="margin: 0; font-size: 13px;">&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;This is with reference to your requirement of ${productType}; we are pleased to submit our offer for the same.</p>
+        <p style="margin: 0; font-size: 13px;">We hope our offer is in line with your requirement and commercially affordable. If you need further information/ clarification, we shall submit the same on hearing from you.</p>
+        <p style="margin: 0; font-size: 13px;">Thanking you and assuring you of our best attention at all times.</p><br>
+        <table>
+            <thead>
+                <tr>
+                    <th class="sno-col">S.No</th>
+                    <th class="item-col">Items</th>
+                    <th class="unit-col">Unit</th>
+                    <th class="price-col">Price</th>
+                </tr>
+            </thead>
+            <tbody>
+    `;
+
+    
+
+    let totalAmount = 0;
+    items.forEach((item, index) => {
+        const amount = item.quantity * item.price;
+        totalAmount += amount;
+        quotationHTML += `
+            <tr>
+                <td>${index + 1}</td>
+                <td style="text-align: left;">${item.item}${item.addManually} <br>  ${item.specifications} </td>
+                <td>${item.unit}</td> <!-- Add the selected unit -->
+                <td>${item.price}</td>
+            </tr>
+        `;
+     
+
+        
+    });
+       
+     
+    quotationHTML += `
+            </tbody>
+        </table><br><br><br><br><br><br><br><br><br><br>
+   
+
+   <div style="flex-grow: 1; text-align: right;">
+   <p style="margin: 0; font-size: 16px; font-weight: bold;">For, Vaibhav Enterprises</p>
+    </div>
+    
+    `;
+
+    // Create a new window and write HTML content
+    const win = window.open('', '_blank');
+    win.document.write(quotationHTML);
+    win.document.close();
+
+    
+    setTimeout(() => {
+        
+        // Print the document
+        win.print();
+    }, 500);
+       
+        }
+
+        function formatDate(dateString) {
+        const [year, month, day] = dateString.split('-');
+        return `${day}/${month}/${year}`;
+    }
+    function generateEstimate() {
+           
+
+           const beneficiary = document.getElementById('beneficiary').value;
+           const company = document.getElementById('company').value;
+           const city = document.getElementById('city').value;
+           const state = document.getElementById('state').value;
+           const subject = document.getElementById('subject').value;
+           const productType = document.getElementById('productType').value; // Get selected product type
+
+
+            // Retrieve the reference number from the input field
+   const refNo = document.getElementById('refNo').value;
+
+
+// Retrieve selected date and format it
+const selectedDate = document.getElementById('date').value;
+const formattedDate = selectedDate ? formatDate(selectedDate) : '&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;';
+// Retrieve the contact number if the checkbox is checked
+const contactCheckbox = document.getElementById('contactCheckbox');
+   const contactNumberTextbox = document.getElementById('contactNumber');
+   const contactNumber = contactCheckbox.checked ? contactNumberTextbox.value : '';
+
+   // Include "Contact No:" heading only if the checkbox is checked
+   const contactInfo = contactCheckbox.checked ? `<p>Contact No: ${contactNumber}</p>` : '';
+
+
+   // Retrieve the Kind Attn if the checkbox is checked
+const kindAttnCheckbox = document.getElementById('kindAttnCheckbox');
+   const kindAttnTextbox = document.getElementById('kindAttn');
+   const kindAttn = kindAttnCheckbox.checked ? kindAttnTextbox.value : '';
+
+   // Include "Kind Attn: " heading only if the checkbox is checked
+   const KindAttnPersonInfo = kindAttnCheckbox.checked ? `<p>Kind Attn: ${kindAttn}</p>` : '';
+
+// Retrieve the Email Id if the checkbox is checked
+const emailCheckbox = document.getElementById('emailCheckbox');
+   const emailTextbox = document.getElementById('emailInput');
+   const emailInput = emailCheckbox.checked ? emailTextbox.value : '';
+
+   // Include "Kind Attn: " heading only if the checkbox is checked
+   const emailIdInputInfo = emailCheckbox.checked ? `<p>Email ID: ${emailInput}</p>` : '';
+
+
+
+           const items = [];
+           for (let i = 1; i <= itemCount; i++) {
+               const item = document.getElementById(`items${i}`).value;
+               const addManuallyCheckbox = document.getElementById('addManuallyCheckbox');
+    const addManuallyTextbox = document.getElementById('addManually');
+    const addManually = addManuallyCheckbox.checked ? addManuallyTextbox.value.replace() : '';
+               const specificationCheckbox = document.getElementById('specificationCheckbox');
+    const specificationsTextbox = document.getElementById('specifications');
+    const specifications = specificationCheckbox.checked ? specificationsTextbox.value.replace(/\n/g, '<br>') : '';
+               const unit = document.getElementById(`unit${i}`).value; // Get the selected unit
+               const quantity = parseInt(document.getElementById(`quantity${i}`).value);
+               const price = parseFloat(document.getElementById(`price${i}`).value);
+               items.push({ item,specifications, unit, quantity, price });
+           }
+
+           
+           let quotationHTML = `
+       <style>
+           /* Styles for the header image */
+       .header-image {
+           position: fixed;
+           top: 0;
+           left: -8;
+           width: 104%;
+           z-index: -1;
+       }
+       
+           table {
+               width: 100%;
+               border-collapse: collapse;
+           }
+           th, td {
+               border: 1px solid black;
+               padding: 8px;
+               text-align: center;
+           }
+           th {
+               text-align: center;
+           }
+           
+           .sno-col {
+               width: 10%;
+           }
+           .item-col {
+               width: 40%;
+           }
+           
+           .unit-col {
+               width: 20%;
+           }
+           .qty-col {
+                width: 10%;
+            }
+           .price-col {
+               width: 20%;
+           }
+           .amount-col {
+                width: 20%;
+            }
+
+           .watermark {
+   position: absolute;
+   top: 50%;
+   left: 50%;
+   transform: translate(-50%, -50%);
+   width: 600px; /* Set the width */
+   height: auto; /* Automatically adjust height to maintain aspect ratio */
+   opacity: 0.1; /* Set the opacity (0.5 is 50%) */
+   pointer-events: none; /* Make sure the image doesn't interfere with mouse events */
+}
+.footer-image {
+   page-break-before: always; /* Add a page break before the footer image */
+   position: fixed;
+   bottom: 0;
+   left: 50%;
+   transform: translateX(-50%);
+   z-index: -1;
+   width: 700px; /* Adjust width as needed */
+   height: auto; /* Adjust height as needed */
+}
+
+          </style>
+          <!-- Header image -->
+   <img src="https://github.com/ArjunPimplapure/VEERP/blob/main/VE%20LE.jpg?raw=trues" class="header-image" alt="Header Image" width="200" height="auto"><br><br><br><br><br><br><br><br><br><br>
+
+   <!-- Footer image -->
+<img src="https://github.com/ArjunPimplapure/VEERP/blob/main/Footer.jpg?raw=true" class="footer-image" alt="Footer Image" width="400" height="auto">
+
+<img src="https://vaibhaventerprise.in/images/logo.png" class="watermark" alt="watermark">
+
+<div style="display: flex; justify-content: space-between;">
+   <div style="flex-grow: 1;">
+       <p style="margin: 0; font-size: 12px; font-weight: bold;">Ref No: VE/24-25/ ${refNo}</p>
+   </div>
+   <div style="flex-grow: 1; text-align: center;">
+       <h2 style="margin: 0; font-size: 12px; font-weight: bold;">Estimate</h2>
+   </div>
+   <div style="flex-grow: 1; text-align: right;">
+       <p style="margin: 0; font-size: 12px; font-weight: bold;">Date: ${formattedDate}</p>
+   </div>
+</div><br>
+
+<div style="flex-grow: 1;">
+
+       <p style="margin: 0; font-size: 12px; font-weight: bold;">To,</p>
+       <p style="margin: 0; font-size: 12px; font-weight: bold;">${beneficiary}</p>
+       <p style="margin: 0; font-size: 12px; font-weight: bold;">${company}</p>
+       <p style="margin: 0; font-size: 12px; font-weight: bold;">Add: ${city} ${state}</p>
+       <!-- New "Contact No." section -->
+       
+       <div style="margin: 0; font-size: 12px; font-weight: bold;">
+           <p>${contactInfo}</p>
+           <p>${emailIdInputInfo}</p>
+       </div>
+
+       <!-- New "Kind Attn" section -->
+       <div style="margin: 0; font-size: 12px; font-weight: bold;">
+           <p>${KindAttnPersonInfo}</p>
+       </div>
+
+       <div style="margin: 0; font-size: 12px; font-weight: bold;">
+           <p>Subject: ${subject} ${productType}</p>
+   </div><br>
+ 
+       <p style="margin: 0; font-size: 13px;">Hello Sir/ Ma'am,</p>
+       <p style="margin: 0; font-size: 13px;">&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;This is with reference to your requirement of ${productType}; we are pleased to submit our offer for the same.</p>
+       <p style="margin: 0; font-size: 13px;">We hope our offer is in line with your requirement and commercially affordable. If you need further information/ clarification, we shall submit the same on hearing from you.</p>
+       <p style="margin: 0; font-size: 13px;">Thanking you and assuring you of our best attention at all times.</p><br>
+       <table>
+           <thead>
+               <tr>
+                   <th class="sno-col">S.No</th>
+                   <th class="item-col">Description</th>
+                   <th class="unit-col">Unit</th>
+                   <th class="qty-col">Qty</th>
+                   <th class="price-col">Rate</th>
+                   <th class="amount-col">Amount</th>
+
+               </tr>
+           </thead>
+           <tbody>
+
+   `;
+
+   
+
+   let totalAmount = 0;
+   items.forEach((item, index) => {
+       const amount = item.quantity * item.price;
+       totalAmount += amount;
+       quotationHTML += `
+           <tr>
+               <td>${index + 1}</td>
+               <td style="text-align: left;">${item.item}${item.addManually} <br>  ${item.specifications} </td>
+               <td>${item.unit}</td> <!-- Add the selected unit -->
+               <td>${item.quantity}</td>
+               <td>${item.price}</td>
+               <td>${amount}</td>
+           </tr>
+       `;
+    
+
+       
+   });
+      
+    
+   quotationHTML += `
+           </tbody>
+       </table><br><br><br><br><br><br><br><br><br><br>
+   
+
+       <div style="flex-grow: 1; text-align: right;">
+       <p style="margin: 0; font-size: 16px; font-weight: bold;">For, Vaibhav Enterprises</p>
+        </div>
+   `;
+
+   // Create a new window and write HTML content
+   const win = window.open('', '_blank');
+   win.document.write(quotationHTML);
+   win.document.close();
+
+   
+   setTimeout(() => {
+       
+       // Print the document
+       win.print();
+   }, 500);
+      
+       }
+
+       function generatePerformaInvoice() {
+           
+
+           const beneficiary = document.getElementById('beneficiary').value;
+           const company = document.getElementById('company').value;
+           const city = document.getElementById('city').value;
+           const state = document.getElementById('state').value;
+           const subject = document.getElementById('subject').value;
+           const productType = document.getElementById('productType').value; // Get selected product type
+
+
+            // Retrieve the reference number from the input field
+   const refNo = document.getElementById('refNo').value;
+
+
+// Retrieve selected date and format it
+const selectedDate = document.getElementById('date').value;
+const formattedDate = selectedDate ? formatDate(selectedDate) : '&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;';
+// Retrieve the contact number if the checkbox is checked
+const contactCheckbox = document.getElementById('contactCheckbox');
+   const contactNumberTextbox = document.getElementById('contactNumber');
+   const contactNumber = contactCheckbox.checked ? contactNumberTextbox.value : '';
+
+   // Include "Contact No:" heading only if the checkbox is checked
+   const contactInfo = contactCheckbox.checked ? `<p>Contact No: ${contactNumber}</p>` : '';
+
+
+   // Retrieve the Kind Attn if the checkbox is checked
+const kindAttnCheckbox = document.getElementById('kindAttnCheckbox');
+   const kindAttnTextbox = document.getElementById('kindAttn');
+   const kindAttn = kindAttnCheckbox.checked ? kindAttnTextbox.value : '';
+
+   // Include "Kind Attn: " heading only if the checkbox is checked
+   const KindAttnPersonInfo = kindAttnCheckbox.checked ? `<p>Kind Attn: ${kindAttn}</p>` : '';
+
+// Retrieve the Email Id if the checkbox is checked
+const emailCheckbox = document.getElementById('emailCheckbox');
+   const emailTextbox = document.getElementById('emailInput');
+   const emailInput = emailCheckbox.checked ? emailTextbox.value : '';
+
+   // Include "Kind Attn: " heading only if the checkbox is checked
+   const emailIdInputInfo = emailCheckbox.checked ? `<p>Email ID: ${emailInput}</p>` : '';
+
+
+
+           const items = [];
+           for (let i = 1; i <= itemCount; i++) {
+               const item = document.getElementById(`items${i}`).value;
+               const addManuallyCheckbox = document.getElementById('addManuallyCheckbox');
+    const addManuallyTextbox = document.getElementById('addManually');
+    const addManually = addManuallyCheckbox.checked ? addManuallyTextbox.value.replace() : '';
+               const specificationCheckbox = document.getElementById('specificationCheckbox');
+    const specificationsTextbox = document.getElementById('specifications');
+    const specifications = specificationCheckbox.checked ? specificationsTextbox.value.replace(/\n/g, '<br>') : '';
+               const unit = document.getElementById(`unit${i}`).value; // Get the selected unit
+               const quantity = parseInt(document.getElementById(`quantity${i}`).value);
+               const price = parseFloat(document.getElementById(`price${i}`).value);
+               items.push({ item,specifications, unit, quantity, price });
+           }
+
+           
+           let quotationHTML = `
+       <style>
+           /* Styles for the header image */
+       .header-image {
+           position: fixed;
+           top: 0;
+           left: -8;
+           width: 104%;
+           z-index: -1;
+       }
+       
+           table {
+               width: 100%;
+               border-collapse: collapse;
+           }
+           th, td {
+               border: 1px solid black;
+               padding: 8px;
+               text-align: center;
+           }
+           th {
+               text-align: center;
+           }
+           
+           .sno-col {
+               width: 10%;
+           }
+           .item-col {
+               width: 40%;
+           }
+           
+           .unit-col {
+               width: 20%;
+           }
+           .qty-col {
+                width: 10%;
+            }
+           .price-col {
+               width: 20%;
+           }
+           .amount-col {
+                width: 20%;
+            }
+
+           .watermark {
+   position: absolute;
+   top: 50%;
+   left: 50%;
+   transform: translate(-50%, -50%);
+   width: 600px; /* Set the width */
+   height: auto; /* Automatically adjust height to maintain aspect ratio */
+   opacity: 0.1; /* Set the opacity (0.5 is 50%) */
+   pointer-events: none; /* Make sure the image doesn't interfere with mouse events */
+}
+.footer-image {
+   page-break-before: always; /* Add a page break before the footer image */
+   position: fixed;
+   bottom: 0;
+   left: 50%;
+   transform: translateX(-50%);
+   z-index: -1;
+   width: 700px; /* Adjust width as needed */
+   height: auto; /* Adjust height as needed */
+}
+
+          </style>
+          <!-- Header image -->
+   <img src="https://github.com/ArjunPimplapure/VEERP/blob/main/VE%20LE.jpg?raw=trues" class="header-image" alt="Header Image" width="200" height="auto"><br><br><br><br><br><br><br><br><br><br>
+
+   <!-- Footer image -->
+<img src="https://github.com/ArjunPimplapure/VEERP/blob/main/Footer.jpg?raw=true" class="footer-image" alt="Footer Image" width="400" height="auto">
+
+<img src="https://vaibhaventerprise.in/images/logo.png" class="watermark" alt="watermark">
+
+<div style="display: flex; justify-content: space-between;">
+   <div style="flex-grow: 1;">
+       <p style="margin: 0; font-size: 12px; font-weight: bold;">Ref No: VE/24-25/ ${refNo}</p>
+   </div>
+   <div style="flex-grow: 1; text-align: center;">
+       <h2 style="margin: 0; font-size: 12px; font-weight: bold;">Performa Invoice</h2>
+   </div>
+   <div style="flex-grow: 1; text-align: right;">
+       <p style="margin: 0; font-size: 12px; font-weight: bold;">Date: ${formattedDate}</p>
+   </div>
+</div><br>
+
+<div style="flex-grow: 1;">
+
+       <p style="margin: 0; font-size: 12px; font-weight: bold;">To,</p>
+       <p style="margin: 0; font-size: 12px; font-weight: bold;">${beneficiary}</p>
+       <p style="margin: 0; font-size: 12px; font-weight: bold;">${company}</p>
+       <p style="margin: 0; font-size: 12px; font-weight: bold;">Add: ${city} ${state}</p>
+       <!-- New "Contact No." section -->
+       
+       <div style="margin: 0; font-size: 12px; font-weight: bold;">
+           <p>${contactInfo}</p>
+           <p>${emailIdInputInfo}</p>
+       </div>
+
+       <!-- New "Kind Attn" section -->
+       <div style="margin: 0; font-size: 12px; font-weight: bold;">
+           <p>${KindAttnPersonInfo}</p>
+       </div>
+
+       <div style="margin: 0; font-size: 12px; font-weight: bold;">
+           <p>Subject: ${subject} ${productType}</p>
+   </div><br>
+ 
+       <p style="margin: 0; font-size: 13px;">Hello Sir/ Ma'am,</p>
+       <p style="margin: 0; font-size: 13px;">&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;This is with reference to your requirement of ${productType}; we are pleased to submit our offer for the same.</p>
+       <p style="margin: 0; font-size: 13px;">We hope our offer is in line with your requirement and commercially affordable. If you need further information/ clarification, we shall submit the same on hearing from you.</p>
+       <p style="margin: 0; font-size: 13px;">Thanking you and assuring you of our best attention at all times.</p><br>
+       <table>
+           <thead>
+               <tr>
+                   <th class="sno-col">S.No</th>
+                   <th class="item-col">Description</th>
+                   <th class="unit-col">Unit</th>
+                   <th class="qty-col">Qty</th>
+                   <th class="price-col">Price Per Unit</th>
+                   <th class="amount-col">Total Amount</th>
+
+               </tr>
+           </thead>
+           <tbody>
+
+   `;
+
+   
+
+   let totalAmount = 0;
+   items.forEach((item, index) => {
+       const amount = item.quantity * item.price;
+       totalAmount += amount;
+       quotationHTML += `
+           <tr>
+               <td>${index + 1}</td>
+               <td style="text-align: left;">${item.item}${item.addManually} <br>  ${item.specifications} </td>
+               <td>${item.unit}</td> <!-- Add the selected unit -->
+               <td>${item.quantity}</td>
+               <td>${item.price}</td>
+               <td>${amount}</td>
+           </tr>
+       `;
+    
+
+       
+   });
+      
+    
+   quotationHTML += `
+           </tbody>
+       </table><br><br><br><br><br><br><br><br><br><br>
+   
+
+       <div style="flex-grow: 1; text-align: right;">
+       <p style="margin: 0; font-size: 16px; font-weight: bold;">For, Vaibhav Enterprises</p>
+        </div>
+   `;
+
+   // Create a new window and write HTML content
+   const win = window.open('', '_blank');
+   win.document.write(quotationHTML);
+   win.document.close();
+
+   
+   setTimeout(() => {
+       
+       // Print the document
+       win.print();
+   }, 500);
+      
+       }
+
+
+
+    </script>
+</body>
+</html>
